@@ -1,3 +1,24 @@
+# 2020-12-08 Jason Lester
+# Based on script found on Internet a few years ago
+
+# This script temporarily disables Internet access during the MDT task sequence
+# that you use to generate a custom WIM install file that can have specific
+# settings that you want.  You can also generate a new one ever so often to
+# roll updates into the custom WIM.  The script prevents Windows Store Apps
+# from updating in the background, which breaks the Generalize phase of
+# Sysprep.
+#
+# This needs to be the first step under the State Restore section of your task sequence.
+# Set it as a "Run PowerShell Script" step and point it to your MDT script root like:
+# %SCRIPTROOT%\Internet-Access.ps1
+#
+# To turn Internet access back on, add another step right before the Imaging section and
+# pass it the -Disable option like:
+# %SCRIPTROOT%\Internet-Access.ps1 
+# with -Disable in the Paremeters box.
+# 
+# Update the subnets as needed below
+
 ## Creates the disable option used by the script
 param (
    [Parameter(Mandatory=$False,Position=0)]

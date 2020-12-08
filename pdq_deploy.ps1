@@ -2,6 +2,28 @@
 # Script to connect newly imaged computer to PDQ Deploy and pull down standard applications
 # 2020-12-08 Jason Lester
 # Based on script provided by PDQ.Com
+#
+# This script uses PDQ Deploy to push out a set list of packages
+# at the end of the MDT imaging process.  Psexec.exe needs to be in your
+# MDT server's \scripts directory of the deployment share.
+#
+# You'll need 2 steps added to your task sequence.  One copies psexec.exe to
+# the computers \Windows directory.  The second uses psexec.exe to pull down
+# the PDQ packages.
+# 
+# Add both steps under the State Restore section prior to Enable BitLocker
+# 
+# Copy PSExec Step
+# Type: Command Line
+# Command Line: xcopy "%SCRIPTROOT\PSEXEC.EXE" "C:\WINDOWS" /Q /H /E /I /Y
+#
+# Install PDQ Deploy Applications Step
+# Type: Run PowerShell Script
+# Script: %SCRIPTROOT\pdq_deploy.ps1
+#
+# The imaging process will look like it hangs near the end.  If you pull up PDQ
+# Deploy and look at the package you're sending, you'll it running to the target
+# you are imaging.
 
 # Temporarily turn off firewall on workstation being imaged
 netsh advfirewall set allprofiles state off 2>&1
